@@ -1,0 +1,28 @@
+<div class="wrapper">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortData($event)">
+        <ng-container matColumnDef="firstname">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+            <mat-cell *matCellDef="let employee">{{employee.firstname}}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="lastname">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+            <mat-cell *matCellDef="let employee">{{employee.lastname}}</mat-cell>
+    
+        </ng-container>
+    
+        <ng-container matColumnDef="dateofbirth">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
+            <mat-cell *matCellDef="let employee">{{employee.dateofbirth}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="department">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>
+            <mat-cell *matCellDef="let employee">{{employee.department}}</mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </table>
+  </div>
