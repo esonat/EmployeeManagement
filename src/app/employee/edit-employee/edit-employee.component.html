@@ -17,14 +17,14 @@
                 <!-- Last Name -->
                 <mat-form-field class="example-full-width">
                     <input matInput placeholder="Last Name" formControlName="lastname">
-                    <mat-error *ngIf="submitted && f.firstname.errors">
+                    <mat-error *ngIf="submitted && f.lastname.errors">
                         <mat-error *ngIf="f.lastname.errors.required">Last Name is required</mat-error>
                     </mat-error>
                 </mat-form-field>
                 
                  <!-- Date of birth -->
                  <mat-form-field>
-                    <input matInput readonly [matDatepicker]="picker" placeholder="Date of birth" formControlName="dateofbirth"
+                    <input matInput [matDatepicker]="picker" placeholder="Date of birth" formControlName="dateofbirth"
                     (dateChange)="date($event)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -35,7 +35,7 @@
                 
                 <!-- Department -->
                 <mat-form-field class="example-full-width">
-                    <mat-label>City</mat-label>
+                    <mat-label>Department</mat-label>
                     <mat-select [(value)]="selected" formControlName="selectDepartment">
                         <mat-option *ngFor="let department of departments" [value]="department.value">
                             {{department.viewValue}}

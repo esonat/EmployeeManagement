@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Employee} from "../model/employee";
+import {EmployeeData} from "../model/employeeData";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import {Employee} from "../model/employee";
 export class ApiService {
 
   constructor(private http:HttpClient) { }
-  baseUrl:string="http://localhost:5000/employees/";
+  baseUrl:string="http://localhost:4000/api/employee/";
 
   getEmployees(){;
     return this.http.get<Employee[]>(this.baseUrl);
@@ -18,12 +19,12 @@ export class ApiService {
     return this.http.get(this.baseUrl+id);
   }
 
-  addEmployee(employee:Employee){
+  addEmployee(employee:EmployeeData){
     return this.http.post(this.baseUrl,employee);
   }
 
-  updateEmployee(employee:Employee){
-    return this.http.put(this.baseUrl+employee.id,employee);
+  updateEmployee(id:number,employee:Employee){
+    return this.http.put(this.baseUrl+id,employee);
   }
 
   deleteEmployee(id:number){

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder,Validators} from "@angular/forms";
+import {ApiService} from '../../service/api.service';
+import {Router} from '@angular/router';
 
 export interface Department{
   value:string;
@@ -16,19 +18,19 @@ export class AddEmployeeComponent implements OnInit {
   submitted=false;
 
   departments: Department[]=[
-    {value:'accounting',viewValue:'Accounting'},
-    {value:'management',viewValue:'Management'},
-    {value:'sales',viewValue:'Sales'}
+    {value:'Accounting',viewValue:'Accounting'},
+    {value:'Management',viewValue:'Management'},
+    {value:'Sales',viewValue:'Sales'}
   ];
 
-  constructor(public fb:FormBuilder) { }
+  constructor(private router:Router,public fb:FormBuilder,private apiService:ApiService) { }
 
   ngOnInit() {
     this.addForm=this.fb.group({
       firstname:['',Validators.required],
       lastname:['',Validators.required],
-      dateofbirth:['',[Validators.required]],
-      selectDepartment:['accounting',Validators.required]
+      dateofbirth:['',Validators.required],
+      selectDepartment:['Accounting',Validators.required]
     })
   }
 
@@ -48,7 +50,16 @@ export class AddEmployeeComponent implements OnInit {
       return;
     }
 
-    alert(JSON.stringify(this.addForm.value,null,4));
+    var employee={
+      "firstname":this.addForm.get('firstname').value,
+      "lastname":this.addForm.get('lastname').value,
+      "dateofbirth":this.addForm.get('dateofbirth').value,
+      "department":this.addForm.get('selectDepartment').value
+    }
+
+    this.apiService.addEmployee(employee).subscribe((res)=>{
+      this.router.navigate(['list-employee']);
+    });
   }
 
   title='EmployeeManagement'

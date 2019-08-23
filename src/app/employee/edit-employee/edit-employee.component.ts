@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder,Validators} from "@angular/forms";
-import { ActivatedRoute } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
+import {ApiService} from '../../service/api.service';
+import { Employee } from 'src/app/model/employee';
+import {EmployeeResponse} from 'src/app/model/employeeResponse';
 
 export interface Department{
   value:string;
@@ -13,36 +16,51 @@ export interface Department{
   styleUrls: ['./edit-employee.component.css']
 })
 export class EditEmployeeComponent implements OnInit {
-
+  selected:string = 'Accounting';
   editForm:FormGroup;
   submitted=false;
   id:number;
   private routeParameters:any;
+  firstName:string;
+  lastName:string;
+  dateOfBirth:string;
+  department:string;
+  response:string;
 
   departments: Department[]=[
-    {value:'accounting',viewValue:'Accounting'},
-    {value:'management',viewValue:'Management'},
-    {value:'sales',viewValue:'Sales'}
+    {value:'Accounting',viewValue:'Accounting'},
+    {value:'Management',viewValue:'Management'},
+    {value:'Sales',viewValue:'Sales'}
   ];
 
-  constructor(public fb:FormBuilder,private route:ActivatedRoute) { }
+  constructor(private fb:FormBuilder,private apiService:ApiService,private router:Router,private route:ActivatedRoute) { }
 
   ngOnInit() {
-    this.editForm=this.fb.group({
-      firstname:['',Validators.required],
-      lastname:['',Validators.required],
-      dateofbirth:['',[Validators.required]],
-      selectDepartment:['accounting',Validators.required]
-    })
-
+     
     this.routeParameters = this.route.params.subscribe(params => {
-      this.id = +params['id']; // (+) converts string 'id' to a number
-   });
+      this.id = +params['id'];
+   }); 
 
-   
-   
+    this.apiService.getEmployeeById(this.id).subscribe((res)=>{
+        let data=JSON.stringify(res);
+        let fieldValues=JSON.parse(data);
+        
+        let keys=Object.keys(fieldValues);
+        let values=keys.map(k=>fieldValues[k]);
 
-   alert(this.id);
+        this.firstName=values[1];
+        this.lastName=values[2];
+        this.dateOfBirth=values[3];
+        this.department=values[4];
+        this.selected=values[4];
+
+    this.editForm=this.fb.group({
+      firstname:[this.firstName,Validators.required],
+      lastname:[this.lastName,Validators.required],
+      dateofbirth:[this.dateOfBirth,Validators.required],
+      selectDepartment:[this.department,Validators.required]
+    });
+  });
   }
 
   date(e){
@@ -61,7 +79,21 @@ export class EditEmployeeComponent implements OnInit {
       return;
     }
 
-    alert(JSON.stringify(this.editForm.value,null,4));
+    var employee={
+      "id":this.id,
+      "firstname":this.editForm.get('firstname').value,
+      "lastname":this.editForm.get('lastname').value,
+      "dateofbirth":this.editForm.get('dateofbirth').value,
+      "department":this.editForm.get('selectDepartment').value
+    }
+
+    this.apiService.updateEmployee(this.id,employee).subscribe((res)=>{
+      alert('Employee edited');
+
+      this.router.navigate(['list-employee']);
+
+    });
+
   }
 
   title='EmployeeManagement'

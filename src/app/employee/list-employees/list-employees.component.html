@@ -20,6 +20,18 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>
             <mat-cell *matCellDef="let employee">{{employee.department}}</mat-cell>
         </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Edit</mat-header-cell>
+            <mat-cell *matCellDef="let employee"><a mat-button [routerLink]="['/edit-employee',employee.id]">Edit</a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Delete</mat-header-cell>
+            <mat-cell *matCellDef="let employee"><button mat-stroked-button color="warn" class="btn-block" (click)="deleteEmployee(employee.id)">Delete</button>
+            </mat-cell>
+        </ng-container>
     
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     
